@@ -1,0 +1,34 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
+canvas {
+  display: block;
+}
+
+#sketch-container {
+  margin: 30px 0;
+}
+    /* Layout container */
+#top-row {
+  display: flex;
+  width: 100%;
+  height: 60vh; /* top row = 60% of viewport height */
+}
+
+#left-sketch {
+  width: 50%;
+  height: 100%;
+}
+
+#right-sketch {
+  width: 50%;
+  height: 100%;
+}
+
+#bottom-row {
+  width: 100%;
+  height: 40vh; /* bottom = remaining 40% */
+}

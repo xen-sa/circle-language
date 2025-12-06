@@ -1,0 +1,17 @@
+let words = [];
+let info;
+
+function preload(){
+  info = loadTable("/assets/etc/vocab.csv", "csv", "header");
+}
+
+function setup() {
+  createCanvas(400, 400);
+  words=info.getColumn("word");
+}
+
+function draw() {
+  background(220);
+  textAlign(CENTER);
+  fill(0);
+}
