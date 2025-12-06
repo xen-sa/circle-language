@@ -8,7 +8,7 @@ let rightSketch = (p) => {
     let sentence = []; // ordered list of words selected to form the sentence
     let currentSelectedWord = null; // last clicked word for showing options
     const MIN_DIST = 50; // minimum placement distance between words
-    const SENTENCE_SPACING = 12; // pixels between words in the sentence
+    const SENTENCE_SPACING = 30; // pixels between words in the sentence
 
   p.preload = () => {
     info = p.loadTable("/assets/etc/vocabulary.csv", "csv", "header");
@@ -70,8 +70,10 @@ let rightSketch = (p) => {
       let optLabel = optionHit(p.mouseX, p.mouseY, currentSelectedWord);
       if (optLabel) {
         if (!currentSelectedWord.options) currentSelectedWord.options = {};
-        currentSelectedWord.options[optLabel] = !currentSelectedWord.options[optLabel];
-        
+
+        currentSelectedWord.options = { subject: false, object: false, verb: false, adverb: false };
+        currentSelectedWord.options[optLabel] = true;
+
         // notify 3d_sketch of option change
         if (window.onOptionChanged && currentSelectedWord.inSentence) {
           window.onOptionChanged({
@@ -79,6 +81,10 @@ let rightSketch = (p) => {
             translation: currentSelectedWord.translation || currentSelectedWord.text,
             options: currentSelectedWord.options
           });
+        }
+        // notify bottom sketch to regenerate permutations
+        if (currentSelectedWord.inSentence) {
+          notifySentenceChange();
         }
         return;
       }
@@ -89,8 +95,10 @@ let rightSketch = (p) => {
       let optLabel = optionHit(p.mouseX, p.mouseY, s);
       if (optLabel) {
         if (!s.options) s.options = {};
-        s.options[optLabel] = !s.options[optLabel];
-        
+
+        s.options = { subject: false, object: false, verb: false, adverb: false };
+        s.options[optLabel] = true;
+
         // notify 3d_sketch of option change
         if (window.onOptionChanged) {
           window.onOptionChanged({
@@ -99,6 +107,8 @@ let rightSketch = (p) => {
             options: s.options
           });
         }
+        // notify bottom sketch to regenerate permutations
+        notifySentenceChange();
         return;
       }
     }
@@ -159,6 +169,7 @@ let rightSketch = (p) => {
       }
       // attach flags from CSV if available
       let flags = { subject: false, object: false, verb: false, adverb: false };
+      let translation = null;
       if (info) {
         let row = info.findRow ? info.findRow(word, 'word') : null;
         if (!row) {
@@ -178,10 +189,11 @@ let rightSketch = (p) => {
             flags.object = String(row.get('object') || '').toLowerCase() === 'true';
             flags.verb = String(row.get('verb') || '').toLowerCase() === 'true';
             flags.adverb = String(row.get('adverb') || '').toLowerCase() === 'true';
+            translation = row.get('translation') || null;
           } catch (e) {}
         }
       }
-      let ww = new Word(word, x, y, flags);
+      let ww = new Word(word, x, y, flags, translation);
       // mark words that originally landed in the central area as center-candidates
       let cxMin = p.width * 0.35;
       let cxMax = p.width * 0.65;
@@ -244,7 +256,7 @@ let rightSketch = (p) => {
         if (other.inSentence) continue;
         // bounding boxes
         let sw = p.textWidth(s.text);
-        let sh = p.textAscent() + p.textDescent();
+        let sh = p.textAscent() + p.textDescent() + 72;
         let ow = p.textWidth(other.text);
         let oh = p.textAscent() + p.textDescent();
         let sx = s.currentX;
@@ -262,8 +274,8 @@ let rightSketch = (p) => {
           let ux = dx / mag;
           let uy = dy / mag;
           // set temporary avoid offset on other
-          other.avoidDX = (other.avoidDX || 0) + ux * 30;
-          other.avoidDY = (other.avoidDY || 0) + uy * 30;
+          other.avoidDX = (other.avoidDX || 0) + ux * 60;
+          other.avoidDY = (other.avoidDY || 0) + uy * 60;
           other.avoidTimer = 60; // frames to keep avoiding
         }
       }
@@ -324,25 +336,31 @@ let rightSketch = (p) => {
   function drawOptionsForWord(word) {
     if (!word) return;
     const labels = ['subject', 'object', 'verb', 'adverb'];
-    const gap = 5; // horizontal gap between options
-    let totalW = labels.reduce((sum, lab) => sum + p.textWidth(lab) + gap, 0) - gap;
-    let startX = word.currentX + p.textWidth(word.text) / 2 - totalW / 2; // center under word
-    let y = word.currentY + 15; // below the word
-    let x = startX;
+    const lineHeight = 18;
+    let y = word.currentY + 15;
+    let maxWidth = 0;
+
+    for (let lab of labels) {
+      let available = word.flags ? word.flags[lab] : false;
+      if (available) {
+        maxWidth = p.max(maxWidth, p.textWidth(lab));
+      }
+    }
+
+    let startX = word.currentX + p.textWidth(word.text) / 2 - maxWidth / 2;
+
     for (let lab of labels) {
       let available = word.flags ? word.flags[lab] : false;
       if (!available) {
-        x += p.textWidth(lab) + gap;
         continue;
       }
-      // text only, no circle
       p.push();
       let selected = word.options && word.options[lab];
       p.fill(selected ? '#00ff11ff' : '#8888FF');
       p.textAlign(p.LEFT, p.BASELINE);
-      p.text(lab, x, y);
+      p.text(lab, startX, y);
       p.pop();
-      x += p.textWidth(lab) + gap;
+      y += lineHeight;
     }
   }
 
@@ -350,24 +368,30 @@ let rightSketch = (p) => {
   function optionHit(mx, my, word) {
     if (!word) return null;
     const labels = ['subject', 'object', 'verb', 'adverb'];
-    const optSize = 12;
-    const gap = 8;
-    let totalW = labels.reduce((sum, lab) => sum + p.textWidth(lab) + gap, 0) - gap;
-    let startX = word.currentX + p.textWidth(word.text) / 2 - totalW / 2;
+    const lineHeight = 18;
     let y = word.currentY + 15;
-    let x = startX;
+    let maxWidth = 0;
+
+    for (let lab of labels) {
+      let available = word.flags ? word.flags[lab] : false;
+      if (available) {
+        maxWidth = p.max(maxWidth, p.textWidth(lab));
+      }
+    }
+
+    let startX = word.currentX + p.textWidth(word.text) / 2 - maxWidth / 2;
+
     for (let lab of labels) {
       let available = word.flags ? word.flags[lab] : false;
       if (!available) {
-        x += p.textWidth(lab) + gap;
         continue;
       }
       let w = p.textWidth(lab);
       let h = p.textSize();
-      if (mx >= x && mx <= x + w && my >= y - h && my <= y) {
-        return lab; // return the label name
+      if (mx >= startX && mx <= startX + w && my >= y - h && my <= y) {
+        return lab;
       }
-      x += w + gap;
+      y += lineHeight;
     }
     return null;
   }
@@ -433,6 +457,19 @@ let rightSketch = (p) => {
       word.targetY = word.baseY;
     }
     updateSentenceTargets();
+    notifySentenceChange();
+  }
+
+  function notifySentenceChange() {
+    // notify bottom sketch of full sentence with all word data
+    if (window.onSentenceChanged) {
+      let sentenceData = sentence.map(w => ({
+        text: w.text,
+        translation: w.translation || w.text,
+        options: w.options || {}
+      }));
+      window.onSentenceChanged(sentenceData);
+    }
   }
 
   function updateSentenceTargets() {
@@ -465,8 +502,9 @@ let rightSketch = (p) => {
   }
 
   class Word {
-    constructor(text, x, y, flags = { subject:false, object:false, verb:false, adverb:false }) {
+    constructor(text, x, y, flags = { subject:false, object:false, verb:false, adverb:false }, translation = null) {
       this.text = text;
+      this.translation = translation;
       this.baseX = x;
       this.baseY = y;
       this.currentX = x;
