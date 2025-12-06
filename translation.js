@@ -53,9 +53,11 @@ let bottomSketch = (p) => {
       return;
     }
 
+    let orderedSentence = getOrderedSentence(currentSentence);
+
     p.textSize(32);
     p.fill(255, 210, 50);
-    let currentText = currentSentence.map(w => w.text).join(' ');
+    let currentText = orderedSentence.map(w => w.text).join(' ');
     p.text(currentText, 20, 20);
 
     p.textSize(18);
@@ -109,6 +111,23 @@ let bottomSketch = (p) => {
     p.rect(scrollbarX, thumbY, scrollbarWidth, thumbHeight, 4);
   }
 
+  function getSelectedWordType(wordData) {
+    if (!wordData.options) return null;
+    if (wordData.options.subject) return 'subject';
+    if (wordData.options.verb) return 'verb';
+    if (wordData.options.adverb) return 'adverb';
+    if (wordData.options.object) return 'object';
+    return null;
+  }
+
+  function getOrderedSentence(sentenceData) {
+    let subjects = sentenceData.filter(w => getSelectedWordType(w) === 'subject');
+    let verbs = sentenceData.filter(w => getSelectedWordType(w) === 'verb');
+    let adverbs = sentenceData.filter(w => getSelectedWordType(w) === 'adverb');
+    let objects = sentenceData.filter(w => getSelectedWordType(w) === 'object');
+    return [...subjects, ...verbs, ...adverbs, ...objects];
+  }
+
   function updateSentence(sentenceData) {
     currentSentence = sentenceData;
     generatePermutations();
@@ -121,9 +140,10 @@ let bottomSketch = (p) => {
       return;
     }
 
+    let orderedSentence = getOrderedSentence(currentSentence);
     let alternativesPerPosition = [];
 
-    for (let wordData of currentSentence) {
+    for (let wordData of orderedSentence) {
       let alternatives = [];
 
       let selectedOption = null;
