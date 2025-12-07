@@ -13,7 +13,7 @@ let bottomSketch = (p) => {
   };
 
   p.setup = () => {
-    container = document.getElementById("bottom-row");
+    container = document.getElementById("translation-container");
     let w = container.offsetWidth;
     let h = container.offsetHeight;
 
@@ -46,7 +46,11 @@ let bottomSketch = (p) => {
   };
 
   p.draw = () => {
-    p.background(120);
+    p.background(0);
+
+    p.textSize(35);
+    p.fill('#4c4c4cff');
+    p.text('current phrase', 10, 10);
 
     if (currentSentence.length === 0) {
       scrollOffset = 0;
@@ -55,15 +59,15 @@ let bottomSketch = (p) => {
 
     let orderedSentence = getOrderedSentence(currentSentence);
 
-    p.textSize(32);
-    p.fill(255, 210, 50);
+    p.textSize(24);
+    p.fill('#00ff11ff');
     let currentText = orderedSentence.map(w => w.text).join(' ');
-    p.text(currentText, 20, 20);
+    p.text(currentText, 40, 45);
 
     p.textSize(18);
     p.fill(200);
     let yOffset = 70 - scrollOffset;
-    let xOffset = 20;
+    let xOffset = 40;
     let lineHeight = 25;
     let maxWidth = p.width - 40;
 
@@ -125,7 +129,7 @@ let bottomSketch = (p) => {
     let verbs = sentenceData.filter(w => getSelectedWordType(w) === 'verb');
     let adverbs = sentenceData.filter(w => getSelectedWordType(w) === 'adverb');
     let objects = sentenceData.filter(w => getSelectedWordType(w) === 'object');
-    return [...subjects, ...verbs, ...adverbs, ...objects];
+    return [...subjects, ...verbs, ...objects, ...adverbs];
   }
 
   function updateSentence(sentenceData) {

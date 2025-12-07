@@ -8,14 +8,15 @@ canvas {
   display: block;
 }
 
-#sketch-container {
-  margin: 30px 0;
+/* add border */
+.border-box {
+  border: 2px solid rgb(60, 213, 0); /* Optional: for visual debugging */
 }
-    /* Layout container */
+
 #top-row {
   display: flex;
   width: 100%;
-  height: 60vh; /* top row = 60% of viewport height */
+  height: 80vh; /* top row = 80% of viewport height */
 }
 
 #left-sketch {
@@ -26,9 +27,22 @@ canvas {
 #right-sketch {
   width: 50%;
   height: 100%;
+  border-left: 1px solid rgba(255,255,255,0.06);
 }
 
 #bottom-row {
   width: 100%;
-  height: 40vh; /* bottom = remaining 40% */
+  height: 20vh; /* bottom = remaining 20% */
+  display: flex;
+}
+
+#translation-container {
+  width: 30%;
+  height: 100%;
+}
+
+#language-rules {
+  width: 70%;
+  height: 100%;
+  border-left: 1px solid rgba(255,255,255,0.06);
 }

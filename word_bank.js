@@ -436,11 +436,11 @@ let rightSketch = (p) => {
       let canChange = canChangeToOption(word, lab);
 
       if (selected) {
-        p.fill('#00ff11ff');
+        p.fill('#1fa628ff');
       } else if (canChange) {
-        p.fill('#8888FF');
+        p.fill('#ffffffff');
       } else {
-        p.fill('#555555');
+        p.fill('#4c4c4cff');
       }
 
       p.textAlign(p.LEFT, p.BASELINE);
@@ -576,7 +576,6 @@ let rightSketch = (p) => {
         window.onWordRemoved(word.text);
       }
       
-
       if (word.origBaseX !== undefined) {
         // return to original base
         word.baseX = word.origBaseX;
@@ -614,14 +613,8 @@ let rightSketch = (p) => {
       return;
     }
 
-    let orderedSentence = [];
-    let subjects = sentence.filter(w => getSelectedWordType(w) === 'subject');
-    let verbs = sentence.filter(w => getSelectedWordType(w) === 'verb');
-    let adverbs = sentence.filter(w => getSelectedWordType(w) === 'adverb');
-    let objects = sentence.filter(w => getSelectedWordType(w) === 'object');
-    let untyped = sentence.filter(w => getSelectedWordType(w) === null);
-
-    orderedSentence = [...subjects, ...verbs, ...adverbs, ...objects, ...untyped];
+    // Keep words in selection order (as they appear in sentence array)
+    let orderedSentence = sentence;
 
     let widths = orderedSentence.map(s => p.textWidth(s.text));
     let totalW = widths.reduce((a, b) => a + b, 0) + SENTENCE_SPACING * (orderedSentence.length - 1);
@@ -689,13 +682,13 @@ let rightSketch = (p) => {
     display() {
       p.push();
       if (this.inSentence) {
-        p.fill(255, 210, 50);
+        p.fill('#00ff11ff');
       } else {
         let canAdd = canAddWordToSentence(this);
         if (canAdd) {
           p.fill(255);
         } else {
-          p.fill(150);
+          p.fill('#4c4c4cff'); //if can't add to sentence
         }
       }
       p.noStroke();

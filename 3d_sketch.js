@@ -12,6 +12,21 @@ let leftSketch = (p) => {
     verb: { count: 34 }
   };
 
+  // hard-coded scales for each model
+  const modelScales = {
+    "person": 1.0,
+    "unity": 0.5,
+    "communication": 0.7,
+    "movement": 1.0,
+    "life": 1.3,
+    "axis": 0.8,
+    "center": 0.7,
+    "gravity": 1.0,
+    "distance": 0.5,
+    "feeling": 0.85,
+    "connection": 0.6
+  };
+
   // ---------------------------
   // PRELOAD
   // ---------------------------
@@ -87,7 +102,7 @@ let leftSketch = (p) => {
   // DRAW
   // ---------------------------
   p.draw = () => {
-    p.background(200);
+    p.background(100);
     p.orbitControl();
 
     p.rotateY(p.frameCount * 0.003);
@@ -128,11 +143,14 @@ let leftSketch = (p) => {
     
     if (!model) return; // safety check
     
+    // get scale from modelScales map, default to 1.0 if not found
+    let scale = modelScales[translation] || 1.0;
+    
     // create new layer object
     let newLayer = {
       model: model,
       count: count,
-      scale: 1.0,
+      scale: scale,
       rotationOffsetX: p.random(p.TWO_PI),
       rotationOffsetY: p.random(p.TWO_PI),
       rotationOffsetZ: p.random(p.TWO_PI),
