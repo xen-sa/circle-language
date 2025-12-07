@@ -66,7 +66,7 @@ let bottomSketch = (p) => {
 
     p.textSize(18);
     p.fill(200);
-    let yOffset = 70 - scrollOffset;
+    let yOffset = 80 - scrollOffset;
     let xOffset = 40;
     let lineHeight = 25;
     let maxWidth = p.width - 40;
