@@ -8,8 +8,8 @@ let bottomSketch = (p) => {
   let scrollOffset = 0;
 
   p.preload = () => {
-    info = p.loadTable("/assets/etc/vocabulary.csv", "csv", "header");
-    vt323 = p.loadFont("/assets/etc/VT323-Regular.ttf");
+    info = p.loadTable("assets/etc/vocabulary.csv", "csv", "header");
+    vt323 = p.loadFont("assets/etc/VT323-Regular.ttf");
   };
 
   p.setup = () => {

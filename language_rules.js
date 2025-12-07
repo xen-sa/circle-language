@@ -8,7 +8,7 @@ let languageRulesSketch = (p) => {
   p.preload = () => {
     // reuse font if available
     try {
-      vt323 = p.loadFont('/assets/etc/VT323-Regular.ttf');
+      vt323 = p.loadFont('assets/etc/VT323-Regular.ttf');
     } catch (e) {}
   };
 

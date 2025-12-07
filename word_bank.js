@@ -11,8 +11,8 @@ let rightSketch = (p) => {
     const SENTENCE_SPACING = 30; // pixels between words in the sentence
 
   p.preload = () => {
-    info = p.loadTable("/assets/etc/vocabulary.csv", "csv", "header");
-    vt323 = p.loadFont("/assets/etc/VT323-Regular.ttf");
+    info = p.loadTable("assets/etc/vocabulary.csv", "csv", "header");
+    vt323 = p.loadFont("assets/etc/VT323-Regular.ttf");
   }
   
   p.setup = () => {

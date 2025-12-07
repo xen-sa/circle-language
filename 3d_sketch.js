@@ -31,17 +31,17 @@ let leftSketch = (p) => {
   // PRELOAD
   // ---------------------------
   p.preload = () => {
-    let person        = p.loadModel("/assets/models/person.obj", true);
-    let unity         = p.loadModel("/assets/models/unity.obj", true);
-    let communication = p.loadModel("/assets/models/communication.obj", true);
-    let movement      = p.loadModel("/assets/models/movement.obj", true);
-    let life          = p.loadModel("/assets/models/life.obj", true);
-    let axis          = p.loadModel("/assets/models/axis.obj", true);
-    let center        = p.loadModel("/assets/models/center.obj", true);
-    let gravity       = p.loadModel("/assets/models/gravity.obj", true);
-    let distance      = p.loadModel("/assets/models/distance.obj", true);
-    let feeling       = p.loadModel("/assets/models/feeling.obj", true);
-    let connection    = p.loadModel("/assets/models/connection.obj", true);
+    let person        = p.loadModel("assets/models/person.obj", true);
+    let unity         = p.loadModel("assets/models/unity.obj", true);
+    let communication = p.loadModel("assets/models/communication.obj", true);
+    let movement      = p.loadModel("assets/models/movement.obj", true);
+    let life          = p.loadModel("assets/models/life.obj", true);
+    let axis          = p.loadModel("assets/models/axis.obj", true);
+    let center        = p.loadModel("assets/models/center.obj", true);
+    let gravity       = p.loadModel("assets/models/gravity.obj", true);
+    let distance      = p.loadModel("assets/models/distance.obj", true);
+    let feeling       = p.loadModel("assets/models/feeling.obj", true);
+    let connection    = p.loadModel("assets/models/connection.obj", true);
 
     // map translations to models (add more as needed)
     modelMap = {
