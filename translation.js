@@ -14,6 +14,7 @@ let bottomSketch = (p) => {
 
   p.setup = () => {
     container = document.getElementById("translation-container");
+    p.pixelDensity(1.3);
     let w = container.offsetWidth;
     let h = container.offsetHeight;
 

@@ -14,6 +14,7 @@ let languageRulesSketch = (p) => {
 
   p.setup = () => {
     container = document.getElementById('language-rules');
+    p.pixelDensity(1.3);
     let w = container.offsetWidth;
     let h = container.offsetHeight;
     let c = p.createCanvas(w, h);

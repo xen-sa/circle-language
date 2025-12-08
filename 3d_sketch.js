@@ -3,6 +3,7 @@ let leftSketch = (p) => {
   let layers = [];
   let container1;
   let modelMap = {}; // map translation to model
+  let mouseOverCanvas = false;
   
   // model definitions with their counts based on option
   const modelDefs = {
@@ -66,12 +67,17 @@ let leftSketch = (p) => {
   // ---------------------------
   p.setup = () => {
     container1 = document.getElementById("left-sketch");
+    p.pixelDensity(1.3);
 
     let w = container1.offsetWidth;
     let h = container1.offsetHeight;
 
     let c = p.createCanvas(w, h, p.WEBGL);
     c.parent(container1);
+
+    // track when mouse is over the container so orbitControl only runs then
+    container1.addEventListener('mouseenter', () => { mouseOverCanvas = true; });
+    container1.addEventListener('mouseleave', () => { mouseOverCanvas = false; });
 
     computeLayerDistances();
     
@@ -103,7 +109,10 @@ let leftSketch = (p) => {
   // ---------------------------
   p.draw = () => {
     p.background(100);
-    p.orbitControl();
+    // only enable orbit controls when the mouse is over this sketch's container
+    if (mouseOverCanvas) {
+      p.orbitControl();
+    }
 
     p.rotateY(p.frameCount * 0.003);
     p.rotateZ(p.frameCount * 0.003);

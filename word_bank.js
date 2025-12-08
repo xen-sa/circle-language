@@ -21,6 +21,7 @@ let rightSketch = (p) => {
     let h = container.offsetHeight;
     let c = p.createCanvas(w, h);
     c.parent(container);
+    p.pixelDensity(1.3);
 
     p.textSize(18);
     p.textFont(vt323);
@@ -33,6 +34,10 @@ let rightSketch = (p) => {
 
   p.draw = () => {
     p.background(0);
+    
+    // draw help rectangle at top-left
+    drawHelpBox();
+    
     // draw non-sentence words first
     for (let w of words) {
       w.update();
@@ -218,6 +223,19 @@ let rightSketch = (p) => {
 
           x = p.constrain(x, 40, w - 40);
           y = p.constrain(y, 40, h - 40);
+          
+          // avoid help box area at top-left
+          let helpBoxX = 10;
+          let helpBoxY = 10;
+          let helpBoxW = 200; // approximate width
+          let helpBoxH = 60;
+          let margin = 15;
+          if (x >= helpBoxX - margin && x <= helpBoxX + helpBoxW + margin && 
+              y >= helpBoxY - margin && y <= helpBoxY + helpBoxH + margin) {
+            placed = false;
+            attempts++;
+            continue;
+          }
 
           placed = true;
           for (let other of words) {
@@ -242,6 +260,37 @@ let rightSketch = (p) => {
         words.push(ww);
       }
     }
+  }
+
+  // draw help box at top-left
+  function drawHelpBox() {
+    let padding = 10;
+    let cornerRadius = 6;
+    let boxX = 10;
+    let boxY = 10;
+    
+    // measure text to calculate box size
+    p.push();
+    p.textSize(16);
+    p.textAlign(p.LEFT, p.TOP);
+    let text = 'select words to create a phrase';
+    let textW = p.textWidth(text);
+    let textH = 20; // approximate line height for textSize 16
+    
+    let boxW = textW + padding * 2;
+    let boxH = textH + padding * 2;
+    
+    // draw background box
+    p.fill(20);
+    p.stroke(80);
+    p.strokeWeight(1);
+    p.rect(boxX, boxY, boxW, boxH, cornerRadius);
+    p.noStroke();
+    
+    // draw text
+    p.fill(200);
+    p.text(text, boxX + padding, boxY + padding);
+    p.pop();
   }
 
   // push overlapping words apart (transiently, doesn't change base positions)
@@ -662,11 +711,32 @@ let rightSketch = (p) => {
         let t = p.millis();
         let ox = (p.noise(this.phase, t * this.speed) - 0.5) * 2 * this.amp;
         let oy = (p.noise(this.phase + 100, t * this.speed) - 0.5) * 2 * this.amp;
-        // smooth interpolation toward float target
+        // smooth interpolation toward float target (slower for smoothness)
         let floatTargetX = this.baseX + ox + (this.avoidDX || 0);
         let floatTargetY = this.baseY + oy + (this.avoidDY || 0);
-        this.currentX = p.lerp(this.currentX, floatTargetX, 0.06);
-        this.currentY = p.lerp(this.currentY, floatTargetY, 0.06);
+        
+        // check if floating into help box and repel
+        let helpBoxX = 10;
+        let helpBoxY = 10;
+        let helpBoxW = 250;
+        let helpBoxH = 60;
+        let repelMargin = 30;
+        if (floatTargetX >= helpBoxX - repelMargin && floatTargetX <= helpBoxX + helpBoxW + repelMargin &&
+            floatTargetY >= helpBoxY - repelMargin && floatTargetY <= helpBoxY + helpBoxH + repelMargin) {
+          // repel outward from help box center
+          let boxCenterX = helpBoxX + helpBoxW / 2;
+          let boxCenterY = helpBoxY + helpBoxH / 2;
+          let angle = p.atan2(floatTargetY - boxCenterY, floatTargetX - boxCenterX);
+          let pushDist = 40;
+          this.avoidDX = p.cos(angle) * pushDist;
+          this.avoidDY = p.sin(angle) * pushDist;
+          this.avoidTimer = 60;
+        }
+        
+        // slower lerp for smoother floating (reduced from 0.06 to 0.04)
+        this.currentX = p.lerp(this.currentX, floatTargetX, 0.04);
+        this.currentY = p.lerp(this.currentY, floatTargetY, 0.04);
+        
         // decay avoidance over time
         if (this.avoidTimer > 0) {
           this.avoidTimer--;
