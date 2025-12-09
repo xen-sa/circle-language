@@ -271,9 +271,9 @@ let rightSketch = (p) => {
     
     // measure text to calculate box size
     p.push();
-    p.textSize(16);
+    p.textSize(18);
     p.textAlign(p.LEFT, p.TOP);
-    let text = 'select words to create a phrase';
+    let text = 'click on words to create a phrase'; //add: select its syntactic role
     let textW = p.textWidth(text);
     let textH = 20; // approximate line height for textSize 16
     

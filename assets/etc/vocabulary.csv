@@ -37,3 +37,4 @@ move,FALSE,FALSE,TRUE,FALSE,movement
 rotation,TRUE,TRUE,FALSE,FALSE,movement
 rotate,FALSE,FALSE,TRUE,FALSE,movement
 movement,TRUE,TRUE,FALSE,FALSE,movement
+cycle,TRUE,TRUE,FALSE,FALSE,movement

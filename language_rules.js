@@ -1,7 +1,7 @@
 let languageRulesSketch = (p) => {
   let container;
   let vt323;
-  let buttons = ["physical properties", "concepts limiting language", "syntax", "verbs"];
+  let buttons = ["gravitational pull", "circular time", "perpetual unity", "rotation"];
   let buttonRects = [];
   let selectedButton = 0;
 
@@ -39,7 +39,7 @@ let languageRulesSketch = (p) => {
     p.fill('#4c4c4cff');
     p.text('language rules', 10, 10);
 
-    p.textSize(16);
+    p.textSize(20);
 
     // draw buttons on the left
     let y = 60;
@@ -62,11 +62,11 @@ let languageRulesSketch = (p) => {
         p.fill(200);
       }
       // ellipse marker
-      p.ellipse(40, y, 15);
+      p.ellipse(40, y+4, 15);
 
       // label
       if (selectedButton === i) p.fill('#00ff11ff'); else p.fill(180);
-      p.text(b, 50, y - 8);
+      p.text(b, 55, y - 8);
 
       y += 30;
     }
@@ -83,18 +83,13 @@ let languageRulesSketch = (p) => {
     p.noStroke();
 
     p.fill(220);
-    p.textSize(14);
+    p.textSize(18);
     let contentX = panelX + 12;
     let contentY = panelY + 18;
 
-    let contents = [
-        '1. Logographic vocabulary with no phonetic equivalent.\n2. Magnetism towards a center.\n3. Molecular-like connection between phrases with inclination towards the circular shape.\n   → A new phrase appears at the least distance possible from the main center.\n4. Words are a repetition of a symbol around a circle: although the symbols themselves might not be circular, this repetition around an axis makes the words and thus phrases, spherical.',
-        '1. Time \n→As time is circular and actions will happen in all tenses, it is unnecessary to specify the tense. (i.e. I have eaten before, I am eating now, and I will eat again in the future)\n→For this same reason, no adjectives, adverbs or any other vocabulary pertaining to time exists.\n→As time (and life) is circular, there is no beginning and no end, only a point in a cycle where everything is repeated.\n2. Unity\n→There is no distinction of the personal, and thus, the individual. The only way to present a living being is plural. All is pluralized. Nouns have no distinction between singular and plural.\n→Although objects (non-living, other-living) do have a sense of the singular (i.e. one rock,) the same unclear distinction is applied.',
-        '1. Syntax is expressed through morphology. For which the order of the words does not matter. Grammatical "cases"=repetition.\n2. The amount of times a word is **repeated** in its own layer (how many axis the circle is divided into) depends on its syntactic structure.\n   →Subject (nominative): Repeated 12 times.\n   →Object (accusative): Repeated 8 times.\n   →Verb: Repeated 20 times.\n3. The order of the words within a sentence (inside to outside) do not matter as there is no linear time and space.',
-        '1. Verbs are never conjugated\n2. There is no difference on if something is or happens.\n   →There is no verb "to be" (i.e. "moon big" is a complete sentence)\n   →The same word would be used for a verb as for a subject. The differentiation comes through its repetition.'
-    ];
-
-    let lines = contents[selectedButton].split('\n');
+    // get content based on selected button using switch-case
+    let content = getContent(selectedButton);
+    let lines = content.split('\n');
     for (let i = 0; i < lines.length; i++) {
       p.text(lines[i], contentX, contentY + i * 18, panelW-36);
     }
@@ -113,6 +108,26 @@ let languageRulesSketch = (p) => {
       }
     }
   };
+
+  // flexible content handler using switch-case
+  function getContent(buttonIndex) {
+    switch(buttonIndex) {
+      case 0: // "gravitational pull"
+        return '1. 3D logographic language with no phonetic equivalent.\n2. Phrases are built through a magnetism towards a center. Words float naturally gravitating towards the same axis, creating a connection to create a phrase.';
+      
+      case 1: // "circular time"
+        return '1. Actions always have happened, are happening and will happen: it is unnecessary to specify the tense, there are no conjugations.\n2. No adjectives, adverbs or any other vocabulary pertaining to time exists.\n3. There is no beginning and no end, only a point in a cycle where everything is repeated.\n4. There is no difference between being and happening: There is no verb “to be”.\n5. The order of the words within a sentence do not matter; no linearity.';
+
+      case 2: // "constant unity"
+        return '1.There is no distinction of the personal, and thus, the individual.\n2. The only way to present a being is plural. All is pluralized. Nouns have no distinction between singular and plural.';
+
+      case 3: // "rotation"
+        return '1. Words are a repetition of a symbol around a circle.\n2. The amount of times a word is repeated in its own layer depends on its syntactic structure.\n----Subject (nominative): Repeated 12 times. \n----Object (accusative): Repeated 8 times.\n----Verb: Repeated 20 times.';
+
+      default:
+        return 'No content available.';
+    }
+  }
 };
 
 new p5(languageRulesSketch);

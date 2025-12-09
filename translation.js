@@ -6,6 +6,8 @@ let bottomSketch = (p) => {
   let currentSentence = [];
   let allPermutations = [];
   let scrollOffset = 0;
+  let autoScrollSpeed = 1; // pixels per frame; set to 0 to disable auto-scroll
+  let autoScrollDirection = 1; // 1 for down, -1 for up
 
   p.preload = () => {
     info = p.loadTable("assets/etc/vocabulary.csv", "csv", "header");
@@ -58,6 +60,21 @@ let bottomSketch = (p) => {
       return;
     }
 
+    // apply auto-scroll
+    let maxScroll = getMaxScrollOffset();
+    if (maxScroll > 0 && autoScrollSpeed > 0) {
+      scrollOffset += autoScrollSpeed * autoScrollDirection;
+      
+      // stop at bottom, bounce back at top
+      if (scrollOffset >= maxScroll) {
+        scrollOffset = maxScroll;
+        autoScrollDirection = 0; // stop scrolling
+      } else if (scrollOffset <= 0) {
+        scrollOffset = 0;
+        autoScrollDirection = 1;
+      }
+    }
+
     let orderedSentence = getOrderedSentence(currentSentence);
 
     p.textSize(24);
@@ -80,13 +97,12 @@ let bottomSketch = (p) => {
         xOffset = 20;
       }
 
-      if (yOffset + lineHeight > 60 && yOffset < p.height) {
+      if ((yOffset + lineHeight -10 > 75 && yOffset + lineHeight < p.height - 5)) {
         p.text(permText, xOffset, yOffset);
       }
       yOffset += lineHeight;
     }
 
-    let maxScroll = getMaxScrollOffset();
     if (maxScroll > 0) {
       drawScrollbar(maxScroll);
     }
