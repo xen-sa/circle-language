@@ -134,7 +134,7 @@ let languageRulesSketch = (p) => {
         return "1. Actions always have happened, are happening and will happen: it is unnecessary to specify the tense, there are no conjugations.\n" + 
         "2. No adjectives, adverbs or any other vocabulary pertaining to time exists.\n" + 
         "3. There is no beginning and no end, only a point in a cycle where everything is repeated.\n" + 
-        "4. There is no difference between being and happening: There is no verb “to be.\n" + 
+        '4. There is no difference between being and happening: there is no verb “to be."\n' + 
         "5. The order of the words within a sentence do not matter: there is no linearity.";
 
       case 2: // "constant unity"
