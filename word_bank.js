@@ -273,23 +273,21 @@ let rightSketch = (p) => {
     p.push();
     p.textSize(18);
     p.textAlign(p.LEFT, p.TOP);
-    let text = 'click on words to create a phrase'; //add: select its syntactic role
-    let textW = p.textWidth(text);
-    let textH = 20; // approximate line height for textSize 16
+    let text = "1. click on words to create a phrase.\n2. select its syntactic role."; //add: select its syntactic role
+    let textH = 45;
     
-    let boxW = textW + padding * 2;
     let boxH = textH + padding * 2;
     
     // draw background box
     p.fill(20);
     p.stroke(80);
     p.strokeWeight(1);
-    p.rect(boxX, boxY, boxW, boxH, cornerRadius);
+    p.rect(boxX, boxY, 290, boxH, cornerRadius);
     p.noStroke();
     
     // draw text
     p.fill(200);
-    p.text(text, boxX + padding, boxY + padding);
+    p.text(text, boxX + padding, boxY + padding, 290);
     p.pop();
   }
 

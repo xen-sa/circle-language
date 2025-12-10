@@ -1,29 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circle Language</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Intro Video</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  </head>
-  <body>
-    <div id="top-row">
-      <div id="left-sketch"></div>
-      <div id="right-sketch"></div>
-    </div>
+    body {
+      width: 100vw;
+      height: 100vh;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
 
-    <div id="bottom-row">
-      <div id="translation-container"></div>
-      <div id="language-rules"></div>
-    </div>
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <video id="introVideo" autoplay>
+    <source src="assets/etc/video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
-    <!-- sketches -->
-    <script src="3d_sketch.js"></script>
-    <script src="word_bank.js"></script>
-    <script src="translation.js"></script>
-    <script src="language_rules.js"></script>
-  </body>
+  <script>
+    const video = document.getElementById('introVideo');
+
+    // When video ends, redirect to the main app
+    video.addEventListener('ended', () => {
+      window.location.href = 'app.html';
+    });
+
+    // Pause/resume video when clicking on it
+    video.addEventListener('click', () => {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  </script>
+</body>
 </html>

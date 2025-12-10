@@ -4,12 +4,19 @@ let languageRulesSketch = (p) => {
   let buttons = ["gravitational pull", "circular time", "perpetual unity", "rotation"];
   let buttonRects = [];
   let selectedButton = 0;
+  let rotationImage;
+  let unityImage;
+  let gravityImage;
+
 
   p.preload = () => {
     // reuse font if available
     try {
       vt323 = p.loadFont('assets/etc/VT323-Regular.ttf');
     } catch (e) {}
+    rotationImage = p.loadImage('assets/etc/rotation.gif');
+    unityImage = p.loadImage('assets/etc/unity.png');
+    gravityImage = p.loadImage('assets/etc/gravity.gif');
   };
 
   p.setup = () => {
@@ -76,6 +83,9 @@ let languageRulesSketch = (p) => {
     let panelY = 15;
     let panelW = p.width - panelX - 10;
     let panelH = p.height - 20;
+    let imageW = panelH *0.6;
+    let imageX = panelX+panelW*0.6 + imageW;
+    let imageY = panelY + 36;
 
     p.fill(10);
     p.stroke(60);
@@ -87,12 +97,16 @@ let languageRulesSketch = (p) => {
     let contentX = panelX + 12;
     let contentY = panelY + 18;
 
-    // get content based on selected button using switch-case
     let content = getContent(selectedButton);
-    let lines = content.split('\n');
-    for (let i = 0; i < lines.length; i++) {
-      p.text(lines[i], contentX, contentY + i * 18, panelW-36);
+    let img = getImage(selectedButton);           
+
+    if (selectedButton == 1 || selectedButton == 2) {
+      p.text(content, contentX, contentY, panelW-36);
+    } else{
+      p.text(content, contentX, contentY, panelW * 0.7);
+      p.image(img,imageX,imageY,imageW,imageW);
     }
+
   };
 
   p.mousePressed = () => {
@@ -113,19 +127,44 @@ let languageRulesSketch = (p) => {
   function getContent(buttonIndex) {
     switch(buttonIndex) {
       case 0: // "gravitational pull"
-        return '1. 3D logographic language with no phonetic equivalent.\n2. Phrases are built through a magnetism towards a center. Words float naturally gravitating towards the same axis, creating a connection to create a phrase.';
+        return "1. Phrases are built through a magnetism towards a center. Words float naturally gravitating towards the same axis, creating a connection to create a phrase.\n" + 
+        "";
       
       case 1: // "circular time"
-        return '1. Actions always have happened, are happening and will happen: it is unnecessary to specify the tense, there are no conjugations.\n2. No adjectives, adverbs or any other vocabulary pertaining to time exists.\n3. There is no beginning and no end, only a point in a cycle where everything is repeated.\n4. There is no difference between being and happening: There is no verb “to be”.\n5. The order of the words within a sentence do not matter; no linearity.';
+        return "1. Actions always have happened, are happening and will happen: it is unnecessary to specify the tense, there are no conjugations.\n" + 
+        "2. No adjectives, adverbs or any other vocabulary pertaining to time exists.\n" + 
+        "3. There is no beginning and no end, only a point in a cycle where everything is repeated.\n" + 
+        "4. There is no difference between being and happening: There is no verb “to be.\n" + 
+        "5. The order of the words within a sentence do not matter: there is no linearity.";
 
       case 2: // "constant unity"
-        return '1.There is no distinction of the personal, and thus, the individual.\n2. The only way to present a being is plural. All is pluralized. Nouns have no distinction between singular and plural.';
+        return "1. There is no distinction of the personal, and thus, the individual: There is no distinction between first, second, or third person.\n" + 
+        "2. The only way of a being is plural. All is pluralized: Nouns have no distinction between singular and plural.";
 
       case 3: // "rotation"
-        return '1. Words are a repetition of a symbol around a circle.\n2. The amount of times a word is repeated in its own layer depends on its syntactic structure.\n----Subject (nominative): Repeated 12 times. \n----Object (accusative): Repeated 8 times.\n----Verb: Repeated 20 times.';
+        return "1. Words are a repetition of a symbol around an axis.\n" + 
+        "2. The amount of times a word is repeated in its own layer represents its syntactic structure.\n" + 
+        "----Subject (nominative): Repeated 12 times. \n" + 
+        "----Object (accusative): Repeated 8 times.\n" + 
+        "----Verb: Repeated 20 times.";
 
       default:
-        return 'No content available.';
+        return "No content available.";
+    }
+  }
+
+  function getImage(buttonIndex) {
+    switch(buttonIndex) {
+      case 0: // "gravitational pull"
+        return gravityImage;
+      case 1: // "circular time"
+        return null;
+      case 2: // "constant unity"
+        return null;
+      case 3: // "rotation"
+        return rotationImage;
+      default:
+        return null;
     }
   }
 };

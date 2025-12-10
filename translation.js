@@ -6,7 +6,7 @@ let bottomSketch = (p) => {
   let currentSentence = [];
   let allPermutations = [];
   let scrollOffset = 0;
-  let autoScrollSpeed = 1; // pixels per frame; set to 0 to disable auto-scroll
+  let autoScrollSpeed = 0.3; // pixels per frame; set to 0 to disable auto-scroll
   let autoScrollDirection = 1; // 1 for down, -1 for up
 
   p.preload = () => {
@@ -103,9 +103,9 @@ let bottomSketch = (p) => {
       yOffset += lineHeight;
     }
 
-    if (maxScroll > 0) {
-      drawScrollbar(maxScroll);
-    }
+    //if (maxScroll > 0) {
+    //  drawScrollbar(maxScroll);
+    //}
   };
 
   function getMaxScrollOffset() {
